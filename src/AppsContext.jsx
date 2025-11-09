@@ -1,6 +1,5 @@
 // src/AppsContext.jsx
 import { createContext, useState, useEffect } from "react";
-import plantsData from "./data.json";
 
 import {
   createUserWithEmailAndPassword,
@@ -19,13 +18,11 @@ export const AppsContext = createContext();
 const googleProvider = new GoogleAuthProvider();
 
 export function AppsProvider({ children }) {
-  const [plants, setPlants] = useState([]);
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
 
-  // load plants + listen for auth state
+  // listen for auth state
   useEffect(() => {
-    setPlants(plantsData);
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser || null);
@@ -84,7 +81,6 @@ export function AppsProvider({ children }) {
   return (
     <AppsContext.Provider
       value={{
-        plants,
         user,
         setUser,
         loadingAuth,
