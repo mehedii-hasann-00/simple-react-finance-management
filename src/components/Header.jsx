@@ -4,11 +4,8 @@ import { useState, useContext } from 'react';
 import { div } from 'framer-motion/client';
 
 export default function Header() {
-
     const [menuOpen, setMenuOpen] = useState(false);
-
-    const {user,logoutUser}  = useContext(AppsContext);
-
+    const { user, logoutUser } = useContext(AppsContext);
     console.log(user);
 
     return (
@@ -24,12 +21,25 @@ export default function Header() {
                     <NavLink to="/" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
                         Home
                     </NavLink>
-                    <NavLink to="/plants" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
-                        Plants
-                    </NavLink>
-                    <NavLink to="/profile" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
-                        My Profile
-                    </NavLink>
+
+                    {user ?
+
+                        <>
+                            <NavLink to="/plants" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
+                                Add Transaction
+                            </NavLink>
+                            <NavLink to="/plants" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
+                                My Transaction
+                            </NavLink>
+                            <NavLink to="/plants" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
+                                Reports
+                            </NavLink>
+                            <NavLink to="/profile" className={({ isActive }) => isActive ? 'text-green-500 font-semibold underline' : 'text-gray-700'}>
+                                My Profile
+                            </NavLink>
+                        </>
+
+                        : null}
                 </nav>
             </div>
             <div className="relative">
@@ -52,10 +62,7 @@ export default function Header() {
                             onClick={() => setMenuOpen(!menuOpen)}
                             className="flex items-center gap-2 cursor-pointer px-4 py-2 transition-all duration-300"
                         >
-                            <i
-                                className="lni lni-user-4 text-green-700"
-                                style={{ fontSize: '48px' }}
-                            ></i>
+                            <img src={user.photoURL} alt="" className='h-8 w-8 rounded-full mr-4' />
 
                         </button>
 
@@ -63,7 +70,7 @@ export default function Header() {
                         {menuOpen && (
                             <div className="absolute z-10 right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-100">
                                 <div className="flex px-4 py-2 border-b border-gray-200 text-gray-700 font-medium">
-                                    <span><img src={user.photoURL} alt="" className='h-8 w-8 rounded-full mr-4' /></span>{user.displayName}
+                                    {user.displayName}
                                 </div>
                                 <button
                                     onClick={logoutUser}
