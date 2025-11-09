@@ -1,0 +1,29 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+
+# Mac / System files
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
