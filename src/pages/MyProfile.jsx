@@ -8,7 +8,6 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-
 export default function MyProfile() {
     const { user, setUser } = useContext(AppsContext);
   

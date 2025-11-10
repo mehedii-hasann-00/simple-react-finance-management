@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
 import { toast } from "react-toastify";
 
-const API_BASE = "/api"; // change if needed
-
 const CATEGORIES = [
   "salary","freelance","investment",
   "home","utilities","transport","food","shopping","health","education","entertainment","other"
@@ -30,7 +28,7 @@ export default function AddTransaction() {
     return false;
   }, [form, user]);
 
-  const handle = (k, v) => setForm((s) => ({ ...s, [k]: v }));
+  const handle = (key, val) => setForm((s) => ({ ...s, [key]: val }));
 
   const submit = async (e) => {
     e.preventDefault();
@@ -67,19 +65,16 @@ export default function AddTransaction() {
     <div className="max-w-3xl mx-auto px-6 py-10">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Add Transaction</h1>
-        <p className="text-slate-600 mt-2">
-          Log an income or expense. Your email & name are auto-filled.
-        </p>
       </div>
 
       <form onSubmit={submit} className="space-y-6 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Type</label>
+            <label className="block text-sm font-medium mb-1 text-black">Type</label>
             <select
               value={form.type}
               onChange={(e) => handle("type", e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-black"
             >
               <option value="income">Income</option>
               <option value="expense">Expense</option>
@@ -87,11 +82,11 @@ export default function AddTransaction() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Category</label>
+            <label className="block text-sm font-medium mb-1 text-black">Category</label>
             <select
               value={form.category}
               onChange={(e) => handle("category", e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-black"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c[0].toUpperCase()+c.slice(1)}</option>
@@ -102,49 +97,39 @@ export default function AddTransaction() {
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Amount</label>
+            <label className="block text-sm font-medium mb-1 text-black">Amount</label>
             <input
               type="number"
               min="0"
               step="0.01"
               value={form.amount}
               onChange={(e) => handle("amount", e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-black"
               placeholder="0.00"
               required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Date</label>
-            <input
-              type="date"
-              value={form.date}
-              onChange={(e) => handle("date", e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <label className="block text-sm font-medium mb-1 text-black">Description</label>
           <textarea
             rows={3}
             value={form.description}
             onChange={(e) => handle("description", e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-black"
             placeholder="Optional details"
           />
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">User Email</label>
-            <input value={user?.email || ""} readOnly className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2" />
+            <label className="block text-sm font-medium mb-1 text-black">User Email</label>
+            <input value={user?.email || ""} readOnly className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-black" />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">User Name</label>
-            <input value={user?.displayName || "User"} readOnly className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2" />
+            <label className="block text-sm font-medium mb-1 text-black">User Name</label>
+            <input value={user?.displayName || "User"} readOnly className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-black" />
           </div>
         </div>
 
