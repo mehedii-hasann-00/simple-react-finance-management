@@ -1,141 +1,178 @@
-import { useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { AppsContext } from "../AppsContext";
 import { motion } from "framer-motion";
+import { AppsContext } from "../AppsContext";
 
 export default function Home() {
+    const { user } = useContext(AppsContext);
+    const [loading, setLoading] = useState(true);
+    const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, totalBalance: 0 });
 
-
-
+    useEffect(() => {
+        // Replace this with your real data fetch
+        setTimeout(() => {
+            const totalIncome = 5600;
+            const totalExpense = 3400;
+            const totalBalance = totalIncome - totalExpense;
+            setSummary({ totalIncome, totalExpense, totalBalance });
+            setLoading(false);
+        }, 800);
+    }, [user]);
 
     return (
-        <>
-            <section className="relative bg-[#f8f7f3] overflow-hidden py-8">
-                <div className="grid md:grid-cols-2 items-center min-h-[80vh] px-8 md:px-16">
+        <div className="bg-white dark:bg-[#0B1020] text-black dark:text-white transition-colors duration-300">
+            {/* Banner */}
+            <section className="relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-20 grid lg:grid-cols-2 items-center gap-12">
                     <motion.div
-                        initial={{ opacity: 0, x: -40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 1 }}
-                        className="space-y-6"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        <h1 className="text-5xl md:text-6xl font-serif leading-tight text-[#1f3a2e]">
-                            Uncomplicate <br />
-                            indoor <br />
-                            <span className="italic text-green-800">gardening</span>
-                        </h1>
-                        <p className="text-gray-600 text-lg max-w-md">
-                            Explore our collection of healthy indoor plants and accessories to
-                            create your own green oasis.
-                        </p>
-                        <Link
-                            to="/plants"
-                            className="inline-block border border-gray-400 text-gray-800 px-6 py-3 rounded-md hover:bg-green-800 hover:text-white transition"
-                        >
-                            Discover
-                        </Link>
 
+
+                        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                            Take Control of Your <span className="text-emerald-600">Finances</span> with{" "}
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-indigo-500">
+                                FinEase
+                            </span>
+                        </h1>
+                        <p className="mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-xl">
+                            Manage your income, expenses, and savings goals effortlessly. Track your money and
+                            make smarter financial decisions.
+                        </p>
+                        <div className="mt-8 flex flex-wrap gap-4">
+                            <Link
+                                to="/add-transaction"
+                                className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-500 transition"
+                            >
+                                Add Transaction
+                            </Link>
+                            <Link
+                                to="/my-transactions"
+                                className="border border-gray-300 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                            >
+                                View Transactions
+                            </Link>
+                        </div>
                     </motion.div>
 
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1 }}
-                        className="flex justify-center mt-10 md:mt-0"
+                        className="flex justify-center"
                     >
                         <img
-                            src="/slider1.jpg"
-                            alt="Indoor plants"
-                            className="rounded-lg shadow-lg w-full max-w-md md:max-w-lg object-cover"
+                            src="/finance-banner.svg"
+                            alt="Finance illustration"
+                            className="max-w-md w-full rounded-2xl shadow-xl"
                         />
                     </motion.div>
                 </div>
             </section>
 
+            {/* Overview Section */}
+            <section id="overview" className="bg-gray-50 dark:bg-white/5 py-16 px-6 md:px-8">
+                <div className="max-w-7xl mx-auto text-center">
+                    <h2 className="text-3xl font-semibold mb-10 text-gray-900 dark:text-white">
+                        Financial Overview
+                    </h2>
 
-            <section className="py-16 px-8 bg-white">
-                <h2 className="text-3xl font-semibold text-center text-green-800 mb-10">
-                     Meet Our Green Experts
-                </h2>
-
-                <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-8 max-w-6xl mx-auto text-center">
-                    {[
-                        {
-                            name: "Sophia Green",
-                            role: "Plant Care Specialist",
-                            img: "/sophie.jpeg",
-                        },
-                        {
-                            name: "Liam Leaf",
-                            role: "Indoor Decor Expert",
-                            img: "/liam.jpeg",
-                        },
-                        {
-                            name: "Ava Bloom",
-                            role: "Botanical Designer",
-                            img: "/ava.jpeg",
-                        },
-                        {
-                            name: "Ethan Moss",
-                            role: "Soil & Growth Expert",
-                            img: "/moss.jpeg",
-                        },
-                    ].map((expert) => (
-                        <div
-                            key={expert.name}
-                            className="bg-gray-50 rounded-xl p-6 border hover:shadow-md transition"
-                        >
-                            <img
-                                src={expert.img}
-                                alt={expert.name}
-                                className="w-32 h-32 rounded-lg mx-auto mb-4"
-                            />
-                            <h3 className="text-lg font-semibold text-slate-800">
-                                {expert.name}
-                            </h3>
-                            <p className="text-green-700 text-sm">{expert.role}</p>
-                        </div>
-                    ))}
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {loading ? (
+                            [1, 2, 3].map((i) => (
+                                <div
+                                    key={i}
+                                    className="animate-pulse h-24 bg-gray-200 dark:bg-white/10 rounded-xl"
+                                />
+                            ))
+                        ) : (
+                            <>
+                                <div className="rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 p-6 shadow-sm">
+                                    <h3 className="text-sm uppercase text-gray-500 dark:text-gray-400">
+                                        Total Balance
+                                    </h3>
+                                    <p className="text-2xl font-bold mt-2">${summary.totalBalance.toLocaleString()}</p>
+                                </div>
+                                <div className="rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 p-6 shadow-sm">
+                                    <h3 className="text-sm uppercase text-gray-500 dark:text-gray-400">
+                                        Total Income
+                                    </h3>
+                                    <p className="text-2xl font-bold mt-2 text-emerald-600">
+                                        ${summary.totalIncome.toLocaleString()}
+                                    </p>
+                                </div>
+                                <div className="rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 p-6 shadow-sm">
+                                    <h3 className="text-sm uppercase text-gray-500 dark:text-gray-400">
+                                        Total Expenses
+                                    </h3>
+                                    <p className="text-2xl font-bold mt-2 text-red-600">
+                                        ${summary.totalExpense.toLocaleString()}
+                                    </p>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </section>
 
-            <section className="py-16 px-8 bg-[#f8f7f3]">
-                <h2 className="text-3xl font-semibold text-center text-green-800 mb-10">
-                     Eco Decor Ideas
-                </h2>
+            {/* Budgeting Tips + Financial Planning */}
+            <section className="max-w-7xl mx-auto px-6 md:px-8 py-16">
+                <div className="grid lg:grid-cols-2 gap-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                        className="bg-white dark:bg-white/5 p-8 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm"
+                    >
+                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                            Budgeting Tips
+                        </h3>
+                        <ul className="list-disc pl-6 space-y-3 text-gray-700 dark:text-gray-300">
+                            <li>Pay yourself first — set aside savings before spending.</li>
+                            <li>Track every expense to identify areas of overspending.</li>
+                            <li>Review your budget weekly and adjust when necessary.</li>
+                            <li>Use FinEase to visualize income and expenses effortlessly.</li>
+                        </ul>
+                    </motion.div>
 
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {[
-                        {
-                            title: "Minimalist Green Corner",
-                            img: "/minimal.jpeg",
-                        },
-                        {
-                            title: "Bedroom Jungle Vibes",
-                            img: "/jungle.jpeg",
-                        },
-                        {
-                            title: "Office Fresh Space",
-                            img: "/office.jpeg",
-                        },
-                    ].map((item) => (
-                        <div
-                            key={item.title}
-                            className="rounded-xl overflow-hidden shadow-sm bg-white border hover:shadow-md transition"
-                        >
-                            <img
-                                src={item.img}
-                                alt={item.title}
-                                className="h-32 w-full object-cover"
-                            />
-                            <div className="p-4">
-                                <h3 className="text-lg font-semibold text-slate-800">
-                                    {item.title}
-                                </h3>
-                            </div>
-                        </div>
-                    ))}
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.1 }}
+                        viewport={{ once: true }}
+                        className="bg-white dark:bg-white/5 p-8 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm"
+                    >
+                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                            Why Financial Planning Matters
+                        </h3>
+                        <ul className="list-disc pl-6 space-y-3 text-gray-700 dark:text-gray-300">
+                            <li>Gain confidence in your financial decisions.</li>
+                            <li>Reduce money-related stress and anxiety.</li>
+                            <li>Achieve long-term goals like travel, education, and investments.</li>
+                            <li>Stay disciplined with your monthly budget using FinEase.</li>
+                        </ul>
+                    </motion.div>
                 </div>
+
+                <div className="mt-12 flex flex-wrap gap-4 justify-center">
+                    <Link
+                        to="/add-transaction"
+                        className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-500 transition"
+                    >
+                        Add New Transaction
+                    </Link>
+                    <Link
+                        to="/reports"
+                        className="border border-gray-300 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                    >
+                        Go to Reports
+                    </Link>
+                </div>
+
             </section>
-        </>
+        </div>
     );
 }

@@ -5,20 +5,12 @@ import { useState, useContext, useEffect } from 'react';
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('finease-theme') || 'light');
 
   const { user, logoutUser } = useContext(AppsContext);
   const navigate = useNavigate();
 
-  // Persist & apply theme (adds/removes `dark` on <html>)
-  useEffect(() => {
-    localStorage.setItem('finease-theme', theme);
-    const root = document.documentElement;
-    if (theme === 'dark') root.classList.add('dark');
-    else root.classList.remove('dark');
-  }, [theme]);
+ console.log(user)
 
-  const toggleTheme = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
 
   const linkBase =
     'px-3 py-2 rounded-md text-sm transition-colors duration-200';
@@ -89,30 +81,6 @@ export default function Header() {
 
           {/* Right: Theme + Auth */}
           <div className="flex items-center gap-3 relative">
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-100
-                         dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/10"
-              aria-label="Toggle theme"
-              title="Toggle dark mode"
-            >
-              {theme === 'dark' ? (
-                // Sun
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4"></circle>
-                  <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.5-7.5L17 6m-10 12l-1.5 1.5m12 0L17 18M7 6 5.5 4.5"></path>
-                </svg>
-              ) : (
-                // Moon
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              )}
-              <span className="hidden sm:inline text-sm">{theme === 'dark' ? 'Dark' : 'Light'}</span>
-            </button>
 
             {!user ? (
               <div className="hidden lg:flex items-center">
@@ -253,3 +221,4 @@ export default function Header() {
     </header>
   );
 }
+

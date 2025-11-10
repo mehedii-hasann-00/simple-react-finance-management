@@ -6,25 +6,44 @@ import ErrorPage from "./pages/ErrorPage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import PrivateRoute from "./components/PrivateRoute";
+import AddTransaction from "./pages/AddTransaction";
+import MyTransactions from "./pages/MyTransaction";
+import Reports from "./pages/Reports";
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <Home /> },
-      {
-        path: "plants/:id",
-        element: (
-          <PrivateRoute>
-            {/* <PlantsDetails /> */}
-          </PrivateRoute>
-        ),
-      },
-      { path: "profile", element: <MyProfile /> },
-      { path: "login", element: <Login /> },
-      { path: "signup", element: <Signup /> },
-    ]
-  }
+    {
+        path: "/",
+        element: <App />,
+        errorElement: <ErrorPage />,
+        children: [
+            { index: true, element: <Home /> },
+            {
+                path: "add-transaction",
+                element: (
+                    <PrivateRoute>
+                        <AddTransaction />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "my-transactions",
+                element: (
+                    <PrivateRoute>
+                        <MyTransactions />
+                    </PrivateRoute>
+                ),
+            },
+                        {
+                path: "reports",
+                element: (
+                    <PrivateRoute>
+                        <Reports />
+                    </PrivateRoute>
+                ),
+            },
+            { path: "profile", element: <MyProfile /> },
+            { path: "login", element: <Login /> },
+            { path: "signup", element: <Signup /> },
+        ]
+    }
 ]);
