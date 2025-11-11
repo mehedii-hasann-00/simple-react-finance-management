@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useMemo, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams for getting ID from URL
 import { AppsContext } from "../AppsContext";
 import { ToastContainer, toast } from "react-toastify";
 const CATEGORIES = [
@@ -7,17 +7,52 @@ const CATEGORIES = [
     "home", "utilities", "transport", "food", "shopping", "health", "education", "entertainment", "other"
 ];
 
-export default function AddTransaction() {
+export default function Update() {
     const { user } = useContext(AppsContext);
     const navigate = useNavigate();
+    const { id } = useParams(); 
 
     const [form, setForm] = useState({
-        type: "income",
-        category: "salary",
-        amount: "",
-        description: "",
-        date: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+        type: '',
+        category: '',
+        amount: '',
+        description: '',
+        date: '',
     });
+
+    useEffect(() => {
+      const fetchTransaction = async () => {
+        try {
+          const res = await fetch(`https://react-finance-backend.vercel.app/transactions/${id}`, {
+            method: "GET",
+            headers: {
+              auth_key: `Bearer ${user.accessToken}`,
+              email: user.email,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setForm({
+              type: data.type,
+              category: data.category,
+              amount: data.amount,
+              description: data.description,
+              date: data.date,
+            });
+          } else {
+            toast.error("Transaction not found.");
+          }
+        } catch (err) {
+          toast.error("Failed to fetch transaction data.");
+        }
+      };
+
+      if (id) {
+        fetchTransaction();
+      }
+    }, [id]);
+
     const [loading, setLoading] = useState(false);
 
     const disabled = useMemo(() => {
@@ -45,8 +80,9 @@ export default function AddTransaction() {
                 minute: '2-digit',
                 hour12: true
             });
+
             const payload = {
-                type: form.type,                      // "income" | "expense"
+                type: form.type,                     
                 category: form.category.toLowerCase(),
                 amount: Number(form.amount),
                 description: form.description?.trim(),
@@ -54,38 +90,34 @@ export default function AddTransaction() {
                 email: user.email,
                 name: user.displayName || "User",
             };
-            // console.log(payload);
-            // const res = await fetch(`http://localhost:5001/transactions`, {
-            const res = await fetch(`https://react-finance-backend.vercel.app/transactions`, {
-                method: "POST",
-                headers: { auth_key: `Bearer ${user.accessToken}`,
-                email: user.email,
-                'Content-Type': 'application/json',
-            },
-                body: JSON.stringify(payload)
+
+            const res = await fetch(`https://react-finance-backend.vercel.app/update/${id}`, {
+                method: "PUT",
+                headers: {
+                    auth_key: `Bearer ${user.accessToken}`,
+                    email: user.email,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
             });
-            if (res.status===201) {
-                handle("amount", 0);
-                handle("description", '');
-                
-                toast.success("Transaction added!");
+
+            if (res.status === 200) {
+                toast.success("Transaction updated!");
+            } else {
+                throw new Error("Failed to update transaction");
             }
-            if (!res.ok) throw new Error("Failed to add transaction");
-            
-            // navigate("/my-transactions");
         } catch (err) {
-            
             toast.error(err.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
     };
-    
+
     return (
         <div className="max-w-3xl mx-auto px-6 py-10">
             <ToastContainer />
             <div className="mb-8">
-                <h1 className="text-3xl font-bold">Add Transaction</h1>
+                <h1 className="text-3xl font-bold">Update Transaction</h1>
             </div>
 
             <form onSubmit={submit} className="space-y-6 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
@@ -161,7 +193,7 @@ export default function AddTransaction() {
                        bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500
                        disabled:opacity-60"
                     >
-                        {loading ? "Adding..." : "Add Transaction"}
+                        {loading ? "Updating..." : "Update Transaction"}
                     </button>
                     <button
                         type="button"

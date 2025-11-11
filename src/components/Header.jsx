@@ -9,7 +9,7 @@ export default function Header() {
   const { user, logoutUser } = useContext(AppsContext);
   const navigate = useNavigate();
 
- console.log(user)
+//  console.log(user)
 
 
   const linkBase =

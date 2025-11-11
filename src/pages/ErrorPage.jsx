@@ -18,7 +18,7 @@ function ErrorPage() {
       </p>
 
       <a
-        href="/apps"
+        href="/"
         class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md px-6 py-2 shadow-md transition-all"
       >
         Go Back!

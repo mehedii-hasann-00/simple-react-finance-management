@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
 import { toast } from "react-toastify";
 
-const API_BASE = "/api";
-
 function Badge({ type }) {
   const isIncome = type === "income";
   return (
@@ -27,24 +25,31 @@ export default function MyTransactions() {
   const [type, setType] = useState("all");
   const [month, setMonth] = useState("all"); // yyyy-mm or "all"
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE}/transactions?email=${encodeURIComponent(user.email)}`, {
-          credentials: "include",
+        const res = await fetch(`https://react-finance-backend.vercel.app/get-data`, {
+          method: "GET",
+          headers: {
+            auth_key: `Bearer ${user.accessToken}`,
+            email: user.email,
+            'Content-Type': 'application/json',
+          },
         });
-        if (!res.ok) throw new Error("Failed to fetch transactions");
-        const data = await res.json();
-        setRows(Array.isArray(data) ? data : []);
+        if (res.status === 201) {
+          const data = await res.json();
+          setRows(Array.isArray(data) ? data : []);
+        }
       } catch (err) {
-        toast.error(err.message || "Fetch error");
+        toast.error("Fetch error");
       } finally {
         setLoading(false);
       }
     };
-    if (user?.email) fetchData();
-  }, [user?.email]);
+    fetchData();
+  }, []);
 
   const monthsFromData = useMemo(() => {
     const set = new Set();
@@ -71,8 +76,8 @@ export default function MyTransactions() {
     });
   }, [rows, q, type, month]);
 
-  const totalIncome = filtered.filter(r => r.type === "income").reduce((a,b)=>a+Number(b.amount||0),0);
-  const totalExpense = filtered.filter(r => r.type === "expense").reduce((a,b)=>a+Number(b.amount||0),0);
+  const totalIncome = filtered.filter(r => r.type === "income").reduce((a, b) => a + Number(b.amount || 0), 0);
+  const totalExpense = filtered.filter(r => r.type === "expense").reduce((a, b) => a + Number(b.amount || 0), 0);
   const balance = totalIncome - totalExpense;
 
   const onDelete = async (id) => {
@@ -112,13 +117,12 @@ export default function MyTransactions() {
       toast.error(err.message || "Something went wrong");
     }
   };
-
+  console.log(rows);
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">My Transactions</h1>
-          <p className="text-slate-600 mt-1">Only your entries are shown.</p>
         </div>
         <div className="flex gap-2">
           <button onClick={() => navigate("/add-transaction")}
@@ -135,16 +139,13 @@ export default function MyTransactions() {
           value={q} onChange={(e) => setQ(e.target.value)}
           className="rounded-lg border border-slate-300 px-3 py-2"
         />
-        <select value={type} onChange={(e)=>setType(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2">
+        <select value={type} onChange={(e) => setType(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2">
           <option value="all">All types</option>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        <select value={month} onChange={(e)=>setMonth(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2">
-          {monthsFromData.map((m) => <option key={m} value={m}>{m === "all" ? "All months" : m}</option>)}
-        </select>
-        <button onClick={()=>{ setQ(""); setType("all"); setMonth("all"); }}
-          className="rounded-lg border border-slate-300 px-3 py-2 hover:bg-slate-50">
+        <button onClick={() => { setQ(""); setType("all"); setMonth("all"); }}
+          className="rounded-lg border border-slate-300 px-3 py-2 hover:bg-slate-50 hover:text-black">
           Reset
         </button>
       </div>
@@ -184,11 +185,13 @@ export default function MyTransactions() {
             <div key={t._id} className="rounded-xl bg-white border border-slate-200 p-5 shadow-sm flex flex-col">
               <div className="flex items-center justify-between">
                 <Badge type={t.type} />
-                <span className="text-sm text-slate-500">{new Date(t.date).toLocaleDateString()}</span>
+                <span className="text-sm text-slate-500 text-black">{t.date}</span>
               </div>
               <div className="mt-3">
-                <p className="text-xs uppercase text-slate-500">Category</p>
-                <p className="font-semibold">{t.category?.[0]?.toUpperCase() + t.category?.slice(1)}</p>
+                <p className="text-xs uppercase text-slate-500">Category :
+                  <span className="font-semibold text-black ml-2">{t.category}</span>
+                </p>
+
               </div>
               <div className="mt-2">
                 <p className="text-xs uppercase text-slate-500">Amount</p>
@@ -202,13 +205,13 @@ export default function MyTransactions() {
 
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <button
-                  onClick={() => navigate(`/transaction/${t._id}`)}
-                  className="h-10 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm"
+                  onClick={() => navigate(`/transactions/${t._id}`)}
+                  className="h-10 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm text-black"
                 >
                   View
                 </button>
                 <button
-                  onClick={() => navigate(`/transaction/update/${t._id}`)}
+                onClick={() => navigate(`/update/${t._id}`)}
                   className="h-10 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50 text-sm"
                 >
                   Update

@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import AddTransaction from "./pages/AddTransaction";
 import MyTransactions from "./pages/MyTransaction";
 import Reports from "./pages/Reports";
+import Update from "./pages/Update";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +31,14 @@ export const router = createBrowserRouter([
                 element: (
                     <PrivateRoute>
                         <MyTransactions />
+                    </PrivateRoute>
+                ),
+            },
+                        {
+                path: "update/:id",
+                element: (
+                    <PrivateRoute>
+                        <Update />
                     </PrivateRoute>
                 ),
             },
