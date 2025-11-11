@@ -42,12 +42,10 @@ export default function Home() {
             <section className="relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-20 grid lg:grid-cols-2 items-center gap-12">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                        initial={{ opacity: 0, y: 100 }}
+                        animate={{ opacity: 50, y: 0 }}
+                        transition={{ duration: 3 }}
                     >
-
-
                         <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                             Take Control of Your <span className="text-emerald-600">Finances</span> with{" "}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-indigo-500">
@@ -75,9 +73,9 @@ export default function Home() {
                     </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 1 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1 }}
+                        transition={{ duration: 3 }}
                         className="flex justify-center"
                     >
                         <img

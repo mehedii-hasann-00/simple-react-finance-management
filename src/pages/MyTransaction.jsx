@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
 import { ToastContainer, toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { motion } from "framer-motion";
+
 
 function Badge({ type }) {
   const isIncome = type === "income";
@@ -172,6 +174,13 @@ export default function MyTransactions() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <ToastContainer />
+      <motion.div
+                        initial={{ opacity: 0, y: 100 }}
+                        animate={{ opacity: 50, y: 0 }}
+                        transition={{ duration: 3 }}
+                    >
+
+                    
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">My Transactions</h1>
@@ -214,7 +223,6 @@ export default function MyTransactions() {
         </button>
       </div>
 
-      {/* Summary */}
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         <div className="rounded-xl bg-white border border-slate-200 p-5 shadow-sm">
           <p className="text-xs uppercase text-slate-500">Balance</p>
@@ -232,7 +240,6 @@ export default function MyTransactions() {
         </div>
       </div>
 
-      {/* List */}
       {loading ? (
         <div className="flex justify-center items-center py-8">
           <ClipLoader color="#3498db" loading={loading} size={100} />
@@ -289,6 +296,7 @@ export default function MyTransactions() {
           ))}
         </div>
       )}
+      </motion.div>
     </div>
   );
 }
