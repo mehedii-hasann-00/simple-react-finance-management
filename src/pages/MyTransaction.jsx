@@ -121,6 +121,7 @@ export default function MyTransactions() {
   const totalIncome = filtered.filter(r => r.type === "income").reduce((a, b) => a + Number(b.amount || 0), 0);
   const totalExpense = filtered.filter(r => r.type === "expense").reduce((a, b) => a + Number(b.amount || 0), 0);
   const balance = totalIncome - totalExpense;
+  
 
   const onDelete = async (id) => {
     const ok = await new Promise((resolve) => {

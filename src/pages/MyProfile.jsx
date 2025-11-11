@@ -1,16 +1,13 @@
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { auth } from "../firebase/firebase.init";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppsContext } from "../AppsContext";
-import {
-  onAuthStateChanged,
-  updateProfile,
-} from "firebase/auth";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
 
 export default function MyProfile() {
-    const { user, setUser } = useContext(AppsContext);
-  
+  const { user, setUser } = useContext(AppsContext);
+
   const [newName, setNewName] = useState("");
   const [newPhoto, setNewPhoto] = useState("");
 
@@ -52,12 +49,12 @@ export default function MyProfile() {
   }
 
   return (
-    <section className="min-h-screen bg-gray-50 py-16 px-6">
+    <section className="min-h-screen bg-gradient-to-r from-purple-700 via-indigo-800 to-blue-900 py-16 px-6">
       <ToastContainer />
-      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-8 text-center border border-gray-100">
-        <h2 className="text-2xl font-semibold text-green-700 mb-6">My Profile 
-        </h2>
+      <div className="relative max-w-xl mx-auto bg-white/30 backdrop-blur-lg rounded-xl shadow-lg p-8 text-center border border-gray-100">
+        <h2 className="text-3xl font-semibold text-white mb-6">My Profile</h2>
 
+        {/* User Avatar */}
         <div className="flex justify-center mb-6">
           <img
             src={user.photoURL || "/default-avatar.png"}
@@ -66,48 +63,43 @@ export default function MyProfile() {
           />
         </div>
 
+        {/* User Info */}
         <div className="space-y-2 mb-8">
-          <p className="text-lg font-medium text-gray-800">
-            <span className="text-gray-500">Name: </span> {user.displayName || "Not set"}
+          <p className="text-lg font-medium text-white">
+            <span className="text-black">Name: </span > {user.displayName || "Not set"}
           </p>
-          <p className="text-lg font-medium text-gray-800">
-            <span className="text-gray-500">Email: </span> {user.email}
+          <p className="text-lg font-medium text-white">
+            <span className="text-black">Email: </span> {user.email}
           </p>
         </div>
 
-        <form
-          onSubmit={handleUpdateProfile}
-          className="flex flex-col gap-4 text-left"
-        >
+        {/* Update Profile Form */}
+        <form onSubmit={handleUpdateProfile} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              New Display Name
-            </label>
+            <label className="block text-sm font-medium text-white mb-2">New Display Name</label>
             <input
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Enter new name"
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-600 outline-none"
+              className="text-black w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-600 outline-none bg-white/50 backdrop-blur-md"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              New Photo URL
-            </label>
+            <label className="block text-sm font-medium text-white mb-2">New Photo URL</label>
             <input
               type="text"
               value={newPhoto}
               onChange={(e) => setNewPhoto(e.target.value)}
               placeholder="Enter image URL"
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-600 outline-none"
+              className="text-black w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-600 outline-none bg-white/50 backdrop-blur-md"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-green-700 to-green-500 text-white py-3 rounded-md font-medium hover:from-green-600 hover:to-green-400 transition-all duration-300"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-md font-medium hover:from-indigo-500 hover:to-purple-500 transition-all duration-300"
           >
             Update Profile
           </button>

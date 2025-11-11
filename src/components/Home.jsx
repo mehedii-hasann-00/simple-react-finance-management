@@ -6,17 +6,34 @@ import { AppsContext } from "../AppsContext";
 export default function Home() {
     const { user } = useContext(AppsContext);
     const [loading, setLoading] = useState(true);
-    const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, totalBalance: 0 });
+    const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, balance: 0 })
+
 
     useEffect(() => {
-        // Replace this with your real data fetch
-        setTimeout(() => {
-            const totalIncome = 5600;
-            const totalExpense = 3400;
-            const totalBalance = totalIncome - totalExpense;
-            setSummary({ totalIncome, totalExpense, totalBalance });
-            setLoading(false);
-        }, 800);
+        const getData = async () => {
+            const res = await fetch(`https://react-finance-backend.vercel.app/get-data`, {
+                method: "GET",
+                headers: {
+                    auth_key: `Bearer ${user.accessToken}`,
+                    email: user.email,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (res.status === 201) {
+                const data = await res.json();
+                // 
+                const income = data.filter(r => r.type === "income").reduce((a, b) => a + Number(b.amount || 0), 0);
+                const expense = data.filter(r => r.type === "expense").reduce((a, b) => a + Number(b.amount || 0), 0);
+                const balance = income - expense;
+                setSummary(prev => ({ ...prev, totalExpense: expense, totalIncome: income, balance: balance }));
+                setLoading(false);
+            }
+        }
+        if (user) {
+            getData();
+        }
+
+
     }, [user]);
 
     return (
@@ -64,10 +81,13 @@ export default function Home() {
                         className="flex justify-center"
                     >
                         <img
-                            src="/finance-banner.svg"
+                            src="/images.jpeg"
                             alt="Finance illustration"
-                            className="max-w-md w-full rounded-2xl shadow-xl"
+                            className="w-full rounded-2xl object-cover border-4 border-green-600 shadow-md"
                         />
+
+
+
                     </motion.div>
                 </div>
             </section>
@@ -93,14 +113,14 @@ export default function Home() {
                                     <h3 className="text-sm uppercase text-gray-500 dark:text-gray-400">
                                         Total Balance
                                     </h3>
-                                    <p className="text-2xl font-bold mt-2">${summary.totalBalance.toLocaleString()}</p>
+                                    <p className="text-2xl font-bold mt-2">${summary.balance}</p>
                                 </div>
                                 <div className="rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 p-6 shadow-sm">
                                     <h3 className="text-sm uppercase text-gray-500 dark:text-gray-400">
                                         Total Income
                                     </h3>
                                     <p className="text-2xl font-bold mt-2 text-emerald-600">
-                                        ${summary.totalIncome.toLocaleString()}
+                                        ${summary.totalIncome}
                                     </p>
                                 </div>
                                 <div className="rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 p-6 shadow-sm">
@@ -108,7 +128,7 @@ export default function Home() {
                                         Total Expenses
                                     </h3>
                                     <p className="text-2xl font-bold mt-2 text-red-600">
-                                        ${summary.totalExpense.toLocaleString()}
+                                        ${summary.totalExpense}
                                     </p>
                                 </div>
                             </>

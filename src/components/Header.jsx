@@ -38,7 +38,9 @@ export default function Header() {
             </button>
 
             <Link to="/" className="flex items-center">
-              <img src="/lg.png" alt="FinEase logo" className="h-10 w-10 rounded-lg" />
+              {/* <img src="/lg.png" alt="FinEase logo" className="h-10 w-10 rounded-lg" /> */}
+              <i class="lni lni-shield-dollar"></i>
+
               <p className="ml-2 text-lg font-bold text-green-700 dark:text-emerald-300">FinEase</p>
             </Link>
           </div>
