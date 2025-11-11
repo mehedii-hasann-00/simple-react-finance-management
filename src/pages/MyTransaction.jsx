@@ -1,7 +1,8 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 function Badge({ type }) {
   const isIncome = type === "income";
@@ -20,10 +21,14 @@ export default function MyTransactions() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Simple filters
   const [q, setQ] = useState("");
   const [type, setType] = useState("all");
-  const [month, setMonth] = useState("all"); // yyyy-mm or "all"
+  const [month, setMonth] = useState("all"); 
+
+  const [sortBy, setSortBy] = useState('date');  
+  const [order, setOrder] = useState('desc');
+  const isInitialRender = useRef(true);
+
 
 
   useEffect(() => {
@@ -50,13 +55,49 @@ export default function MyTransactions() {
       }
     };
     fetchData();
+
   }, []);
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://react-finance-backend.vercel.app/sort?sortBy=${sortBy}&order=${order}`, {
+          method: 'GET',
+          headers: {
+            auth_key: `Bearer ${user.accessToken}`,
+            email: user.email,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setRows(data);
+      } catch (err) {
+        toast.error("Failed to fetch transactions");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTransactions();
+
+  }, [sortBy, order]);
+
+  const handleSort = (field) => {
+    setSortBy(field);
+    setOrder(order === 'asc' ? 'desc' : 'asc');
+  };
 
   const monthsFromData = useMemo(() => {
     const set = new Set();
     rows.forEach((r) => {
       if (!r.date) return;
-      const m = new Date(r.date).toISOString().slice(0, 7); // yyyy-mm
+      const m = new Date(r.date).toISOString().slice(0, 7); 
       set.add(m);
     });
     return ["all", ...Array.from(set).sort().reverse()];
@@ -158,6 +199,18 @@ export default function MyTransactions() {
           className="rounded-lg border border-slate-300 px-3 py-2 hover:bg-slate-50 hover:text-black">
           Reset
         </button>
+        <button
+          onClick={() => handleSort('date')}
+          className="rounded-lg border border-slate-300 px-3 py-2 hover:bg-slate-50 hover:text-black"
+        >
+          Sort by Date {order === 'asc' ? '↑' : '↓'}
+        </button>
+        <button
+          onClick={() => handleSort('amount')}
+          className="rounded-lg border border-slate-300 px-3 py-2 hover:bg-slate-50 hover:text-black"
+        >
+          Sort by Amount {order === 'asc' ? '↑' : '↓'}
+        </button>
       </div>
 
       {/* Summary */}
@@ -180,10 +233,8 @@ export default function MyTransactions() {
 
       {/* List */}
       {loading ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-40 rounded-xl bg-slate-100 animate-pulse" />
-          ))}
+        <div className="flex justify-center items-center py-8">
+          <ClipLoader color="#3498db" loading={loading} size={100} />
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">

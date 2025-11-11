@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AppsContext } from '../AppsContext';
 import { ToastContainer, toast } from 'react-toastify';
+import { ClipLoader } from "react-spinners";
+
 
 export default function TransactionDetails() {
   const { user } = useContext(AppsContext);
@@ -66,7 +68,9 @@ export default function TransactionDetails() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center py-16">
+      <ClipLoader color="#3498db" loading={loading} size={250} />
+    </div>;
   }
 
   if (!transaction) {
