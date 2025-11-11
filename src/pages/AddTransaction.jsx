@@ -1,8 +1,7 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
 const CATEGORIES = [
     "salary", "freelance", "investment",
     "home", "utilities", "transport", "food", "shopping", "health", "education", "entertainment", "other"
@@ -55,16 +54,24 @@ export default function AddTransaction() {
                 email: user.email,
                 name: user.displayName || "User",
             };
-            console.log(payload)
-            
-            const res = await fetch(`http://localhost:5001/transactions`, {
+            // console.log(payload);
+            // const res = await fetch(`http://localhost:5001/transactions`, {
+            const res = await fetch(`https://react-finance-backend.vercel.app/transactions`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { auth_key: `Bearer ${user.accessToken}`,
+                email: user.email,
+                'Content-Type': 'application/json',
+            },
                 body: JSON.stringify(payload)
             });
+            if (res.status===201) {
+                handle("amount", 0);
+                handle("description", '');
+                toast.success("Transaction added!");
+            }
             if (!res.ok) throw new Error("Failed to add transaction");
-            toast.success("Transaction added!");
-            navigate("/my-transactions");
+            
+            // navigate("/my-transactions");
         } catch (err) {
             toast.error(err.message || "Something went wrong");
         } finally {
@@ -72,8 +79,11 @@ export default function AddTransaction() {
         }
     };
 
+
+    
     return (
         <div className="max-w-3xl mx-auto px-6 py-10">
+            <ToastContainer />
             <div className="mb-8">
                 <h1 className="text-3xl font-bold">Add Transaction</h1>
             </div>
@@ -156,7 +166,7 @@ export default function AddTransaction() {
                     <button
                         type="button"
                         onClick={() => navigate(-1)}
-                        className="h-11 px-5 rounded-lg border border-slate-300 hover:bg-slate-50"
+                        className="h-11 px-5 rounded-lg border border-slate-300 hover:bg-slate-50 text-black"
                     >
                         Cancel
                     </button>
