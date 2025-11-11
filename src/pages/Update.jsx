@@ -91,7 +91,7 @@ export default function Update() {
                 name: user.displayName || "User",
             };
 
-            const res = await fetch(`https://react-finance-backend.vercel.app/update/${id}`, {
+            const res = await fetch(`https://react-finance-backend.vercel.app/transaction/update/${id}`, {
                 method: "PUT",
                 headers: {
                     auth_key: `Bearer ${user.accessToken}`,
@@ -103,6 +103,10 @@ export default function Update() {
 
             if (res.status === 200) {
                 toast.success("Transaction updated!");
+                setTimeout(() => {
+                    navigate(`/details/${id}`)
+                }, 500);
+                
             } else {
                 throw new Error("Failed to update transaction");
             }

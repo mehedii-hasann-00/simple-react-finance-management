@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
                 ),
             },
             {
-                path: "update/:id",
+                path: "transaction/update/:id",
                 element: (
                     <PrivateRoute>
                         <Update />

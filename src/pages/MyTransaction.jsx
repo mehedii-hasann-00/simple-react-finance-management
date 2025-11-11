@@ -43,7 +43,8 @@ export default function MyTransactions() {
           setRows(Array.isArray(data) ? data : []);
         }
       } catch (err) {
-        toast.error("Fetch error");
+        toast.error("Failed to fetch data");
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -220,7 +221,7 @@ export default function MyTransactions() {
                   View
                 </button>
                 <button
-                  onClick={() => navigate(`/update/${t._id}`)}
+                  onClick={() => navigate(`/transaction/update/${t._id}`)}
                   className="h-10 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50 text-sm"
                 >
                   Update

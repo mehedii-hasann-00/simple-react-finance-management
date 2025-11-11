@@ -91,7 +91,7 @@ export default function TransactionDetails() {
 
         <div className="flex gap-4">
           <button
-            onClick={() => navigate(`/update/${transaction._id}`)}  // Navigate to the update page
+            onClick={() => navigate(`/transaction/update/${transaction._id}`)}  // Navigate to the update page
             className="h-10 px-4 rounded-lg bg-blue-600 text-white hover:bg-blue-500"
           >
             Edit
