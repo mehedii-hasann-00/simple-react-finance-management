@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppsContext } from "../AppsContext";
-import { toast } from "react-toastify";
+import { ToastContainer,toast } from "react-toastify";
 
 function Badge({ type }) {
   const isIncome = type === "income";
@@ -81,7 +81,6 @@ export default function MyTransactions() {
   const balance = totalIncome - totalExpense;
 
   const onDelete = async (id) => {
-    // custom confirm (no browser alert)
     const ok = await new Promise((resolve) => {
       const yes = () => { cleanup(); resolve(true); };
       const no = () => { cleanup(); resolve(false); };
@@ -106,20 +105,30 @@ export default function MyTransactions() {
     if (!ok) return;
 
     try {
-      const res = await fetch(`${API_BASE}/transactions/${id}`, {
+      const res = await fetch(`https://react-finance-backend.vercel.app/transactions/${id}`, {
         method: "DELETE",
-        credentials: "include",
+        headers: {
+          auth_key: `Bearer ${user.accessToken}`,
+          email: user.email,
+          'Content-Type': 'application/json',
+        },
       });
-      if (!res.ok) throw new Error("Delete failed");
-      setRows((s) => s.filter((r) => r._id !== id));
-      toast.success("Transaction deleted");
+      if (res.ok) {
+        setRows((s) => s.filter((r) => r._id !== id));
+        toast.success("Transaction deleted");
+      }
+      else {
+        toast.error("Delete failed");
+      }
+
+
     } catch (err) {
       toast.error(err.message || "Something went wrong");
     }
   };
-  console.log(rows);
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
+      <ToastContainer />
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">My Transactions</h1>
@@ -205,13 +214,13 @@ export default function MyTransactions() {
 
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <button
-                  onClick={() => navigate(`/transactions/${t._id}`)}
+                  onClick={() => navigate(`/details/${t._id}`)}
                   className="h-10 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm text-black"
                 >
                   View
                 </button>
                 <button
-                onClick={() => navigate(`/update/${t._id}`)}
+                  onClick={() => navigate(`/update/${t._id}`)}
                   className="h-10 rounded-lg border border-indigo-300 text-indigo-700 hover:bg-indigo-50 text-sm"
                 >
                   Update

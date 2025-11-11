@@ -2,7 +2,6 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { AppsContext } from "../AppsContext";
 import { toast } from "react-toastify";
 
-const API_BASE = "/api";
 
 export default function Reports() {
   const { user } = useContext(AppsContext);

@@ -10,6 +10,7 @@ import AddTransaction from "./pages/AddTransaction";
 import MyTransactions from "./pages/MyTransaction";
 import Reports from "./pages/Reports";
 import Update from "./pages/Update";
+import TransactionDetails from "./pages/TransactionDetails";
 
 export const router = createBrowserRouter([
     {
@@ -34,11 +35,19 @@ export const router = createBrowserRouter([
                     </PrivateRoute>
                 ),
             },
-                        {
+            {
                 path: "update/:id",
                 element: (
                     <PrivateRoute>
                         <Update />
+                    </PrivateRoute>
+                ),
+            },
+                        {
+                path: "details/:id",
+                element: (
+                    <PrivateRoute>
+                        <TransactionDetails />
                     </PrivateRoute>
                 ),
             },
