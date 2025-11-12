@@ -1,20 +1,49 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { AppsContext } from '../AppsContext';
 import { useState, useContext, useEffect } from 'react';
+import { Moon, Sun } from 'lucide-react';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const { user, logoutUser } = useContext(AppsContext);
   const navigate = useNavigate();
 
-  const linkBase =
-    'px-3 py-2 rounded-md text-sm transition-colors duration-200';
-  const linkActive =
-    'text-green-600 dark:text-emerald-300 font-semibold underline';
-  const linkInactive =
-    'text-gray-700 hover:text-green-600 dark:text-gray-200 dark:hover:text-emerald-300';
+  const linkBase = 'px-3 py-2 rounded-md text-sm transition-colors duration-200';
+  const linkActive = 'text-green-600 dark:text-emerald-300 font-semibold';
+  const linkInactive = 'text-gray-700 hover:text-green-600 dark:text-gray-200 dark:hover:text-emerald-300';
+
+  // Read theme from localStorage on initial load
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      // Default to browser preference if no saved theme
+      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+  }, []);
+
+  // Toggle the theme
+  const toggleTheme = () => {
+    setIsDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      // Save to localStorage
+      localStorage.setItem('theme', newMode ? 'dark' : 'light');
+      return newMode;
+    });
+  };
+
+  // Apply theme class to document element
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur dark:bg-[#0B1020]/80 border-b border-gray-200 dark:border-white/10">
@@ -86,7 +115,10 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3 relative">
-
+            
+            <button onClick={toggleTheme} className='rounded-full p-1 shadow-md shadow-green-400 cursor-pointer text-gray-600 hover:text-green-400 transition-all ease-in-out'>
+              {isDarkMode ? <Sun/> : <Moon/>}
+            </button>
 
             {!user ? (
               <div className="hidden lg:flex items-center">

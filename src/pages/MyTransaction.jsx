@@ -95,15 +95,15 @@ export default function MyTransactions() {
     setOrder(order === 'asc' ? 'desc' : 'asc');
   };
 
-  const monthsFromData = useMemo(() => {
-    const set = new Set();
-    rows.forEach((r) => {
-      if (!r.date) return;
-      const m = new Date(r.date).toISOString().slice(0, 7); 
-      set.add(m);
-    });
-    return ["all", ...Array.from(set).sort().reverse()];
-  }, [rows]);
+  // const monthsFromData = useMemo(() => {
+  //   const set = new Set();
+  //   rows.forEach((r) => {
+  //     if (!r.date) return;
+  //     const m = new Date(r.date).toISOString().slice(0, 7); 
+  //     set.add(m);
+  //   });
+  //   return ["all", ...Array.from(set).sort().reverse()];
+  // }, [rows]);
 
   const filtered = useMemo(() => {
     return rows.filter((r) => {
@@ -251,7 +251,7 @@ export default function MyTransactions() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((t) => (
-            <div key={t._id} className="rounded-xl bg-white border border-slate-200 p-5 shadow-sm flex flex-col">
+            <div key={t._id} className="shadow-md shadow-green-400 rounded-xl bg-white dark:shadow-purple-400 p-5 flex flex-col">
               <div className="flex items-center justify-between">
                 <Badge type={t.type} />
                 <span className="text-sm text-slate-500 text-black">{t.date}</span>
