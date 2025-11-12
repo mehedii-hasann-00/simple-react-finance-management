@@ -5,7 +5,6 @@ import { useState, useContext, useEffect } from 'react';
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('theme') === 'dark');
 
   const { user, logoutUser } = useContext(AppsContext);
   const navigate = useNavigate();
@@ -16,22 +15,6 @@ export default function Header() {
     'text-green-600 dark:text-emerald-300 font-semibold underline';
   const linkInactive =
     'text-gray-700 hover:text-green-600 dark:text-gray-200 dark:hover:text-emerald-300';
-
-  const toggleTheme = () => {
-    setIsDarkMode((prevMode) => {
-      const newMode = !prevMode;
-      localStorage.setItem('theme', newMode ? 'dark' : 'light');
-      return newMode;
-    });
-  };
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur dark:bg-[#0B1020]/80 border-b border-gray-200 dark:border-white/10">
@@ -103,24 +86,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3 relative">
-            {/* Theme Toggle Switch */}
-            <label htmlFor="theme-toggle" className="flex items-center cursor-pointer">
-              <div className="relative">
-                <input
-                  id="theme-toggle"
-                  type="checkbox"
-                  checked={isDarkMode}
-                  onChange={toggleTheme}
-                  className="sr-only"
-                />
-                <div className="block w-10 h-6 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                <div
-                  className={`dot absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition ${
-                    isDarkMode ? 'transform translate-x-4' : ''
-                  }`}
-                ></div>
-              </div>
-            </label>
+
 
             {!user ? (
               <div className="hidden lg:flex items-center">

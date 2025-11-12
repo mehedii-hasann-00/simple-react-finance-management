@@ -75,13 +75,13 @@ export default function Home() {
                     <motion.div
                         initial={{ opacity: 0, scale: 1 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 3 }}
+                        transition={{ duration: 5 }}
                         className="flex justify-center"
                     >
                         <img
-                            src="/images.jpeg"
+                            src="/fin.png"
                             alt="Finance illustration"
-                            className="w-full rounded-2xl object-cover border-4 border-green-600 shadow-md"
+                            className="w-full lg:w-1/2 rounded-2xl object-cover border-4 border-green-600 shadow-md"
                         />
 
 
@@ -141,7 +141,7 @@ export default function Home() {
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 3 }}
                         viewport={{ once: true }}
                         className="bg-white dark:bg-white/5 p-8 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm"
                     >
